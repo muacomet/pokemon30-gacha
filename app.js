@@ -3,12 +3,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = document.getElementById('card');
     const pokemonImage = document.getElementById('pokemon-image');
     const pokemonNumberText = document.getElementById('pokemon-number');
+    const pokemonNameText = document.getElementById('pokemon-name-text');
 
     // The total number of Pokémon in the dataset
     const TOTAL_POKEMON = 1025;
 
     // Prevent multiple clicks while drawing
     let isDrawing = false;
+
+    // Store Pokemon names
+    let pokemonNames = {};
+
+    // Fetch names on load
+    fetch('pokemon_names.json')
+        .then(response => response.json())
+        .then(data => {
+            pokemonNames = data;
+        })
+        .catch(err => console.error("Failed to load pokemon names:", err));
 
     drawBtn.addEventListener('click', () => {
         if (isDrawing) return;
@@ -50,11 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // We use Serebii's convention naming '001.png' to '1025.png'
             const imagePath = `images/${formattedId}.png`;
 
-            revealPokemon(imagePath, randomId);
+            // Get Korean Name
+            const koName = pokemonNames[randomId] || '알 수 없음';
+
+            revealPokemon(imagePath, randomId, koName);
         }, 1500); // 1.5 seconds of tension
     }
 
-    function revealPokemon(imagePath, id) {
+    function revealPokemon(imagePath, id, name) {
         // Preload image to avoid pop-in while card flips
         const img = new Image();
         img.onload = () => {
@@ -64,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update card DOM
             pokemonImage.src = imagePath;
             pokemonNumberText.innerText = `No. ${String(id).padStart(3, '0')}`;
+            pokemonNameText.innerText = name;
 
             // Trigger flip animation
             requestAnimationFrame(() => {
