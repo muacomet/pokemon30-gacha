@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포켓몬 30주년 기념 뽑기</title>
+    <meta name="description" content="세레비 포켓몬 30주년 기념 랜덤 뽑기 사이트입니다.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-animation">
+        <div class="glow-orb red"></div>
+        <div class="glow-orb blue"></div>
+        <div class="glow-orb yellow"></div>
+    </div>
+
+    <main class="container">
+        <header>
+            <h1>포켓몬 30주년 기념</h1>
+            <p>오늘의 포켓몬은 뭘까요? 1025마리 중 누가 나올까요?</p>
+        </header>
+
+        <div class="gacha-display">
+            <div id="card" class="card empty">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="pokeball-placeholder"></div>
+                    </div>
+                    <div class="card-back">
+                        <img id="pokemon-image" src="" alt="뽑힌 포켓몬" />
+                    </div>
+                </div>
+            </div>
+
+            <div id="pokemon-info" class="hidden">
+                <h2 id="pokemon-number">No. 000</h2>
+            </div>
+        </div>
+
+        <button id="draw-btn" class="premium-button">
+            <span class="button-text">포켓몬 뽑기</span>
+            <div class="button-glow"></div>
+        </button>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
