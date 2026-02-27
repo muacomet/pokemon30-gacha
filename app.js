@@ -51,13 +51,37 @@ document.addEventListener('DOMContentLoaded', () => {
     shareBtn.addEventListener('click', async () => {
         if (!currentId) return;
 
+        const title = '포켓몬 30주년 기념 뽑기';
         const text = `제가 뽑은 포켓몬은 [No.${String(currentId).padStart(3, '0')} ${currentName}] 입니다!\n당신의 포켓몬도 뽑아보세요: https://muacomet.github.io/pokemon30-gacha/`;
         const url = 'https://muacomet.github.io/pokemon30-gacha/';
 
         if (navigator.share) {
             try {
+                // Try to share the image file if the device supports it
+                if (currentImgPath) {
+                    try {
+                        const response = await fetch(currentImgPath);
+                        const blob = await response.blob();
+                        const file = new File([blob], `pokemon_${String(currentId).padStart(3, '0')}.png`, { type: blob.type });
+
+                        // Check if the browser supports sharing files
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                files: [file],
+                                title: title,
+                                text: text
+                                // Note: Some platforms ignore the URL if text/files are present
+                            });
+                            return; // Success
+                        }
+                    } catch (e) {
+                        console.log('이미지 공유 준비 실패:', e);
+                        // Fall back to text sharing below
+                    }
+                }
+
                 await navigator.share({
-                    title: '포켓몬 30주년 기념 뽑기',
+                    title: title,
                     text: text,
                     url: url
                 });
