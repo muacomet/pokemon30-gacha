@@ -348,3 +348,82 @@ header p {
     cursor: not-allowed;
     transform: none;
 }
+
+/* Action Buttons (Download/Share) */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease 0.4s;
+    margin-top: 0.5rem;
+}
+
+.card.flipped~.action-buttons {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.action-buttons.hidden {
+    display: none !important;
+}
+
+.icon-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.icon-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.icon-button:active {
+    transform: translateY(1px);
+}
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 480px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header p {
+        font-size: 0.95rem;
+        padding: 0 1rem;
+    }
+
+    .card {
+        width: 240px;
+        height: 240px;
+    }
+
+    #pokemon-info h2 {
+        font-size: 1.5rem;
+    }
+
+    #pokemon-info h3 {
+        font-size: 1.1rem;
+    }
+
+    .premium-button {
+        padding: 0.9rem 2.8rem;
+    }
+
+    .button-text {
+        font-size: 1.1rem;
+    }
+}

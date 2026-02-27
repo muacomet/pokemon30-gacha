@@ -4,12 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const pokemonImage = document.getElementById('pokemon-image');
     const pokemonNumberText = document.getElementById('pokemon-number');
     const pokemonNameText = document.getElementById('pokemon-name-text');
+    const actionButtons = document.getElementById('action-buttons');
+    const downloadBtn = document.getElementById('download-btn');
+    const shareBtn = document.getElementById('share-btn');
 
     // The total number of Pokémon in the dataset
     const TOTAL_POKEMON = 1025;
 
     // Prevent multiple clicks while drawing
     let isDrawing = false;
+
+    // Store current state for sharing/downloading
+    let currentId = null;
+    let currentName = null;
+    let currentImgPath = null;
 
     // Store Pokemon names
     let pokemonNames = {};
@@ -28,9 +36,49 @@ document.addEventListener('DOMContentLoaded', () => {
         drawPokemon();
     });
 
+    // Action button listeners
+    downloadBtn.addEventListener('click', () => {
+        if (!currentImgPath) return;
+
+        const a = document.createElement('a');
+        a.href = currentImgPath;
+        a.download = `pokemon_${String(currentId).padStart(3, '0')}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+
+    shareBtn.addEventListener('click', async () => {
+        if (!currentId) return;
+
+        const text = `제가 뽑은 포켓몬은 [No.${String(currentId).padStart(3, '0')} ${currentName}] 입니다!\n당신의 포켓몬도 뽑아보세요: https://muacomet.github.io/pokemon30-gacha/`;
+        const url = 'https://muacomet.github.io/pokemon30-gacha/';
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: '포켓몬 30주년 기념 뽑기',
+                    text: text,
+                    url: url
+                });
+            } catch (err) {
+                console.log('공유 취소됨 또는 실패:', err);
+            }
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            try {
+                await navigator.clipboard.writeText(text);
+                alert('뽑기 결과가 클립보드에 복사되었습니다! 친구들에게 공유해보세요.');
+            } catch (err) {
+                alert('클립보드 복사에 실패했습니다.');
+            }
+        }
+    });
+
     function drawPokemon() {
         isDrawing = true;
         drawBtn.disabled = true;
+        actionButtons.classList.add('hidden');
 
         // If the card is already flipped, flip it back first
         if (card.classList.contains('flipped')) {
@@ -76,6 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Stop shaking
             card.classList.remove('shaking');
 
+            // Update state
+            currentId = id;
+            currentName = name;
+            currentImgPath = imagePath;
+
             // Update card DOM
             pokemonImage.src = imagePath;
             pokemonNumberText.innerText = `No. ${String(id).padStart(3, '0')}`;
@@ -84,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Trigger flip animation
             requestAnimationFrame(() => {
                 card.classList.add('flipped');
+                actionButtons.classList.remove('hidden');
 
                 // Reset button state
                 setTimeout(() => {
@@ -100,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isDrawing = false;
             drawBtn.disabled = false;
             drawBtn.querySelector('.button-text').innerText = '포켓몬 뽑기';
+            actionButtons.classList.add('hidden');
             alert(`앗! No. ${id} 이미지를 찾을 수 없습니다. 다운로드 스크립트가 완료되었는지 확인해주세요.`);
         };
 
